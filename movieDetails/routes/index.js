@@ -15,14 +15,27 @@ router.get('/movie/:movieName', function(req, res) {
   let search = req.params.movieName, releasedate
   search = search.replace('%20',' ')
   let finalResult = ''
-  
+
   Promise.all([dbFunctions.selectAllMovieDetails(search), dbFunctions.selectAllActorDetails(search)])
-  .then(function (result) {    
+  .then(function (result) {
+
     let actorArray = result[1].map(function(value, index) {
       return value.name;
     });
-    finalResult = {movieName: search, releasedate: result[0][0].releasedate, actors: actorArray, studio:result[0][0].production }
-    res.send(finalResult )
+    
+    if(!result[0][0].hasOwnProperty('releasedate'))
+      releasedate = ''
+    else {
+      releasedate = result[0][0].releasedate
+    }
+    if(!result[0][0].hasOwnProperty('production'))
+      studio = ''
+    else {
+      studio = result[0][0].production
+    }
+
+    finalResult = { movieName: search, releasedate , actors: actorArray , studio }
+    res.send(finalResult)
   })
   .catch(function (error) {
     console.log(error)
