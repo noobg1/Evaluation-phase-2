@@ -7,7 +7,7 @@ const selectAllMovieDetails = function (movieName) {
 }
 
 const selectAllActorDetails = function (movieName) {
-  return sequelize.query('SELECT NAME FROM actors WHERE movies = ?',
+  return sequelize.query('SELECT DISTINCT(NAME) FROM actors WHERE movies = ?',
     { replacements: [movieName], type: sequelize.QueryTypes.SELECT }
   )
 }

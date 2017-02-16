@@ -3,12 +3,9 @@ const router = express.Router()
 const apiFetchUtilities = require('../models/fetchFromApi')
 const dbFunctions = require('../dbFunctions')
 
-
-
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' })
 });
-
 
 router.get('/movie/:movieName', function(req, res) {
   let search = req.params.movieName, releasedate

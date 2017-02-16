@@ -6,6 +6,8 @@ const server = require('../app')
 
 chai.use(chaiHttp)
 
+const movieObject = {"movieName":"Movie 1","releasedate":"Oct-01-2015","actors":["Actor 1","Actor 3"],"studio":"paramount"}
+
 describe('/fetch movie details from api ', () => {
       it(' should return 200 status on success', (done) => {
         chai.request(server)
@@ -18,7 +20,18 @@ describe('/fetch movie details from api ', () => {
   })
 
 describe('/fetch movie details from db ', () => {
-      it(' should return 200 status on success', (done) => {
+      it(' should return 200 status on success valid movie name input', (done) => {
+        chai.request(server)
+            .get('/movie/Movie 1')
+            .end((err, res) => {
+              console.log(res)
+              expect(JSON.parse(res.text)).to.be.eqls(movieObject)
+              expect(res.status).to.be.eqls(200)
+              done()
+            })
+      })
+
+      it(' should return 200 status on success valid movie name input', (done) => {
         chai.request(server)
             .get('/movie/Movie 1')
             .end((err, res) => {
@@ -37,6 +50,7 @@ describe('/fetch movie details from db ', () => {
               done()
             })
       })
+      
       it('should return error status on success', (done) => {
         chai.request(server)
             .get('/movie/ ')
