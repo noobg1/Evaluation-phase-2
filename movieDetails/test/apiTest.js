@@ -39,11 +39,11 @@ describe('/fetch movie details from db ', () => {
       })
       it('should return error status on success', (done) => {
         chai.request(server)
-            .get('/movie/')
+            .get('/movie/ ')
             .end((err, res) => {
               //console.log(res)
               expect(res.status).to.be.eqls(404)
-              expect(res.text).to.be.eqls('{"error":"Movie name not found"}')
+              expect(res.text).to.be.eqls('Cannot GET /movie/\n')
               done()
             })
       })

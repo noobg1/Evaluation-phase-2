@@ -1,5 +1,6 @@
 const axios = require('axios')
 const dbFunctions = require('../dbFunctions')
+const movieUrls = ['https://movie-api-lyalzcwvbg.now.sh/paramount', 'https://movie-api-lyalzcwvbg.now.sh/dreamworks' ]
 
 function fetchMovieDetails (req, res) {
   axios.get('https://movie-api-lyalzcwvbg.now.sh/paramount')

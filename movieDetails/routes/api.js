@@ -1,7 +1,6 @@
 const express = require('express')
 const router = express.Router()
 const apiFetchUtilities = require('../models/fetchFromApi')
-//const fetchFromDb = require('../models/fetchFromDb')
 const dbFunctions = require('../dbFunctions')
 
 
