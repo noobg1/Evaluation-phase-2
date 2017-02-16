@@ -8,7 +8,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/movie/:movieName', function(req, res) {
-  let search = req.params.movieName.replace('%20',' ')
+  let search = req.params.movieName, releasedate
+  search = search.replace('%20',' ')
   let finalResult = ''
 
   Promise.all([dbFunctions.selectAllMovieDetails(search), dbFunctions.selectAllActorDetails(search)])
@@ -39,10 +40,8 @@ router.get('/movie/:movieName', function(req, res) {
 })
 
 router.get('/fetch', function(req, res) {
-  let urls = req.body['urlApi']
-  console.log("ougyfftf", urls)
-  apiFetchUtilities.fetchActorDetails(req, res, urls)
-  apiFetchUtilities.fetchMovieDetails(req, res, urls)
+  apiFetchUtilities.fetchActorDetails(req, res)
+  apiFetchUtilities.fetchMovieDetails(req, res)
 })
 
 module.exports = router;
