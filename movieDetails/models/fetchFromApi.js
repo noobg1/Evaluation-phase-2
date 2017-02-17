@@ -3,18 +3,18 @@ const dbFunctions = require('../dbFunctions')
 const movieUrls = ['https://movie-api-lyalzcwvbg.now.sh/paramount', 'https://movie-api-lyalzcwvbg.now.sh/dreamworks' ]
 const actorsUrls = ['https://movie-api-lyalzcwvbg.now.sh/actors']
 const globalStudios = ['paramount', 'dreamworks']
-let errorMessage = ''
+let errorMessage = []
 
 let fetchPromiseArrayMovies = []
 let fetchPromiseArrayActors = []
 
-function fetchMovieDetails() {
+function fetchMovieUrls() {
     movieUrls.forEach(function (movieUrl) {
     fetchPromiseArrayMovies.push(axios.get(movieUrl))
   })
 }
  
-function fetchActorDetails() {
+function fetchActorUrls() {
   actorsUrls.forEach(function (actorsUrl) {
     fetchPromiseArrayActors.push(axios.get(actorsUrl))
   })
@@ -29,22 +29,22 @@ function insertIntoDbActors () {
 }
 
 function insertUtility (req, res) {
-  fetchMovieDetails()
-  fetchActorDetails()
+  fetchMovieUrls()
+  fetchActorUrls()
   insertIntoDbActors()
   .then(function (resultActorsUrls) {
-    resultActorsUrls.forEach(function (actors) {
+    resultActorsUrls.forEach(function (actors, index) {
       const allActors = actors.data
       allActors.forEach(function (actor){
         const movieList = actor.movies
         movieList.forEach(function (movie) {
           dbFunctions.insertActorDetails(actor.actorName, movie )
           .then(function (dbInsertionResults){
-            errorMessage += '\nAdding this list to actors db'
+            errorMessage.push(`\nAdding this list to actors db`)
             //console.log('Adding to actors db succeded')
           })
           .catch(function (error) {
-            errorMessage += '\nFailed to add this list to actors db : duplication'
+            errorMessage.push(`\nFailed to add this = ${actor.actorName} list to actors db : duplication`)
             //console.log('Adding to actors db failed')
           })
         })
@@ -58,16 +58,16 @@ function insertUtility (req, res) {
       movies.forEach(function (movie) {
          dbFunctions.insertMovieDetails(movie.movieName, movie.releaseDate, globalStudios[index])
         .then(function(dbInsertionResults) {
-          errorMessage += '\nAdding this list to movies db'
+          errorMessage.push('\nAdding this list to movies db')
           //console.log('Adding to movies db succeded')
         })
         .catch(function (error) {
-          errorMessage += '\nFailed to add this list to movies db : duplication'
+          errorMessage.push( `\nFailed to add this = ${movie.movieName} list to movies db : duplication`)
           //console.log('Adding to movies db failed')
         })
       })
     })
-    res.status(200).send({message: 'Database Update succeded'})
+    res.status(200).send({message: 'fetched  Update succeded', errors: errorMessage})
   })
   .catch(function (error) {
     //console.log('Somethinh went wrong:', errorMessage)
