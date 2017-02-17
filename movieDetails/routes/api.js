@@ -12,7 +12,7 @@ router.get('/movie/:movieName', function(req, res) {
   search = search.replace('%20',' ')
   let finalResult = ''
 
-  Promise.all([dbFunctions.selectAllMovieDetails(search), dbFunctions.selectAllActorDetails(search)])
+  Promise.all([dbFunctions.selectMovieDetails(search), dbFunctions.selectActorDetails(search)])
   .then(function (result) {
 
     let actorArray = result[1].map(function(value, index) {
@@ -34,14 +34,15 @@ router.get('/movie/:movieName', function(req, res) {
     res.send(finalResult)
   })
   .catch(function (error) {
-    //console.log(error)
     res.status(404).send({error: 'Movie name not found'})
   })
 })
 
 router.get('/fetch', function(req, res) {
-  apiFetchUtilities.fetchActorDetails(req, res)
-  apiFetchUtilities.fetchMovieDetails(req, res)
+  // apiFetchUtilities.fetchActorDetails(req, res)
+  // apiFetchUtilities.fetchMovieDetails(req, res)
+  //apiFetchUtilities.fetchMovieAndActors(req, res)
+  apiFetchUtilities.insertUtility(req, res)
 })
 
 module.exports = router;
